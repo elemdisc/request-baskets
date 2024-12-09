@@ -43,7 +43,6 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=ref,event=tag
             type=raw,value=${{ github.head_ref || github.ref_name }}
-            type=sha
 
       - name: Git Short SHA
         id: git_vars
