@@ -45,7 +45,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=ref,event=tag
-            type=raw,value=${{ github.head_ref || github.ref_name }}
+            type=raw,value=${{ github.head_ref || github.ref_name }},enable=${{ github.ref != 'refs/heads/master' }}
 
       - name: Git Short SHA
         id: git_vars
