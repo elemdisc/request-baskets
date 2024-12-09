@@ -47,13 +47,23 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha
 
+      - name: Git Short SHA
+        id: git_vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: docker/multistage/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            GIT_VERSION=${{ github.ref_name }}
+            GIT_COMMIT=${{ github.sha }}
+            GIT_COMMIT_SHORT=${{ steps.git_vars.outputs.sha_short }}
+

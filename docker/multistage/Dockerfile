@@ -6,10 +6,11 @@ FROM --platform=$BUILDPLATFORM golang:latest as builder
 WORKDIR /go/src/rbaskets
 COPY . .
 ARG TARGETARCH
-RUN GIT_VERSION="$(git describe --dirty='*' || git symbolic-ref -q --short HEAD)" \
-  && GIT_COMMIT="$(git rev-parse HEAD)" \
-  && GIT_COMMIT_SHORT="$(git rev-parse --short HEAD)" \
-  && set -x \
+ARG GIT_VERSION
+ARG GIT_COMMIT
+ARG GIT_COMMIT_SHORT
+
+RUN set -x \
   && CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -a -installsuffix cgo \
   -ldflags="-w -s -X main.GitVersion=${GIT_VERSION} -X main.GitCommit=${GIT_COMMIT} -X main.GitCommitShort=${GIT_COMMIT_SHORT}" \
   -o /go/bin/rbaskets
