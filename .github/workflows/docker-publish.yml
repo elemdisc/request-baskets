@@ -8,8 +8,10 @@ on:
     branches: [ "master" ]
 
 env:
-  REGISTRY: docker.io
-  IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGENAME }}
+  DOCKERHUB_REGISTRY: docker.io
+  GITHUB_REGISTRY: ghcr.io
+  DOCKERHUB_IMAGE: ${{ vars.DOCKERHUB_IMAGENAME }}
+  GITHUB_IMAGE: ${{ github.repository }}
 
 jobs:
   build:
@@ -46,8 +48,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            ghcr.io/${{ env.IMAGE_NAME }}
+            ${{ env.DOCKERHUB_REGISTRY }}/${{ env.DOCKERHUB_IMAGE }}
+            ${{ env.GITHUB_REGISTRY }}/${{ env.GITHUB_IMAGE }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
